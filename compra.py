@@ -120,6 +120,20 @@ def extrai_dados_consumidor(soup):
 
     return dados_consumidor
 
+
+def conecta_mongo(link):
+    url = open(link, 'r').read()
+    cliente = MongoClient(url)
+    return cliente
+
+
+def envia_nota_db(cliente):
+    banco = cliente['nfce']
+
+    notas = banco['notas']
+
+    notas.insert_one(nota)
+
 if __name__ == "__main__":
     
     # url = 'http://www.fazenda.pr.gov.br/nfce/qrcode/?p=41200476189406004113651080000588291061915005|2|1|1|FB408E05CECD0D6A9BA23214DD7F588C900BD3D3'
@@ -163,12 +177,7 @@ if __name__ == "__main__":
     }
     
     print(json.dumps(nota))
+    
+    cliente = conecta_mongo('dbaddress')
 
-    url = open('dbaddress', 'r').read()
-    cliente = MongoClient(url)
-
-    banco = cliente['nfce']
-
-    notas = banco['notas']
-
-    notas.insert_one(nota)
+    envia_nota_db(cliente)
